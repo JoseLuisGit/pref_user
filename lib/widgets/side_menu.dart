@@ -44,7 +44,7 @@ class _DrawerHeader extends StatelessWidget {
       decoration: const BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage('menu-img.jpg')
+          image: AssetImage('assets/menu-img.jpg')
           )
       ),);
   }

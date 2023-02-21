@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pref_user/providers/theme_provider.dart';
+import 'package:pref_user/shared/preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:pref_user/widgets/side_menu.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -11,7 +14,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool isDarkMode = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,27 +27,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text('Settings', style: TextStyle(fontSize: 29),),
           Divider(),
           SwitchListTile.adaptive(
-            value: isDarkMode, 
+            value: Preferences.getIsDarkMode(),
             onChanged: (value){
+              final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
+              Preferences.setIsDarkMode = value;
+              value ? themeProvider.setThemeDark() : themeProvider.setThemeLight();
               setState(() {
-                isDarkMode = value;
               });
             },
             title: Text('Dark Mode'),
             ),
           Divider(),
-          RadioListTile(
+          RadioListTile<int>(
             value: 1, 
-            groupValue: 1, 
+            groupValue: Preferences.getGender(), 
             title: Text('Masculino'),
             onChanged: (value){
+              setState(() {
+                Preferences.setGender = value ?? 1;
+              });
             },
             ),
-          RadioListTile(
+          RadioListTile<int>(
             value: 2, 
-            groupValue: 1, 
+            groupValue: Preferences.getGender(), 
             title: Text('Femenino'),
             onChanged: (value){
+              setState(() {
+               Preferences.setGender = value ?? 1;
+              });
             },
             
             ),
@@ -52,6 +64,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Padding(
             padding: EdgeInsets.all(18),
             child: TextFormField(
+              initialValue: Preferences.getName(),
+              onChanged: (value){
+              setState(() {
+                Preferences.setName = value;
+              });
+              },
               decoration: InputDecoration(
                 helperText: 'Nombre de usuario',
                 labelText: 'Nombre'
